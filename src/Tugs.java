@@ -1,7 +1,7 @@
 public class Tugs {
     private int num;
 
-    public Tugs(int num) {
+    Tugs(int num) {
         this.num = num;
     }
 

@@ -1,17 +1,17 @@
 public class Berth {
 
-    private String type = "";
+    private String name = "";
 
-    public String getType() {
-        return type;
+    Berth(String name) {
+        this.name = name;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    String getName() {
+        return name;
     }
 
-    public Berth(String type) {
-        this.type = type;
+    void setName(String name) {
+        this.name = name;
     }
 
 }

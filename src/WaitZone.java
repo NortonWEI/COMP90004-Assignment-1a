@@ -1,24 +1,49 @@
 public class WaitZone {
 
-    private String type = "";
+    private String name = "";
+    //    private int waitingShipNum = 0;
+    private Ship ship;
 
-    public WaitZone(String type) {
-        this.type = type;
+    WaitZone(String name) {
+        this.name = name;
     }
 
-    public void depart() {
+    synchronized void depart() {
 
     }
 
-    public void arrive(Ship ship) {
-
+    synchronized void arrive(Ship ship) {
+        while (this.getShip() != null) {
+            try {
+                wait();
+            } catch (InterruptedException e) {}
+        }
+        notify();
+        this.ship = ship;
+        System.out.println(ship + " arrives at arrival zone.");
     }
 
-    public String getType() {
-        return type;
+    synchronized void acquireShip(Pilot pilot) {
+        pilot.setCurrentShip(getShip());
+        setShip(null);
+        if (pilot.getCurrentShip() != null) {
+            System.out.println("pilot " + pilot.getPid() + " acquires " + pilot.getCurrentShip() + ".");
+        }
     }
 
-    public void setType(String type) {
-        this.type = type;
+    String getName() {
+        return name;
+    }
+
+    void setName(String name) {
+        this.name = name;
+    }
+
+    Ship getShip() {
+        return ship;
+    }
+
+    void setShip(Ship ship) {
+        this.ship = ship;
     }
 }

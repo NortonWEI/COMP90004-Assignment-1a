@@ -1,30 +1,39 @@
 public class Pilot extends Thread {
 
-    private int num;
+    private int pid;
     private WaitZone arrivalZone;
     private WaitZone departureZone;
     private Tugs tugs;
     private Berth berth;
+    private Ship currentShip;
 
-    public Pilot(int num, WaitZone arrivalZone, WaitZone departureZone, Tugs tugs, Berth berth) {
-        this.num = num;
+    Pilot(int pid, WaitZone arrivalZone, WaitZone departureZone, Tugs tugs, Berth berth) {
+        this.pid = pid;
         this.arrivalZone = arrivalZone;
         this.departureZone = departureZone;
         this.tugs = tugs;
         this.berth = berth;
     }
 
-//    @Override
     public void run() {
+        while (!isInterrupted()) {
+            if (this.getCurrentShip() != null) {
+//                    System.out.println("pilot " + getPid() + " acquires 3 tugs");
+            } else {
+                if (getArrivalZone().getShip() != null) {
+                    getArrivalZone().acquireShip(this);
+                }
 
+            }
+        }
     }
 
-    public int getNum() {
-        return num;
+    public int getPid() {
+        return pid;
     }
 
-    public void setNum(int id) {
-        this.num = num;
+    public void setPid(int id) {
+        this.pid = pid;
     }
 
     public WaitZone getArrivalZone() {
@@ -59,4 +68,11 @@ public class Pilot extends Thread {
         this.berth = berth;
     }
 
+    Ship getCurrentShip() {
+        return currentShip;
+    }
+
+    void setCurrentShip(Ship currentShip) {
+        this.currentShip = currentShip;
+    }
 }

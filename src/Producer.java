@@ -19,7 +19,7 @@ public class Producer extends Thread {
     public void run() {
         while(!isInterrupted()) {
             try {
-                // create a new cargo ship and send it to the arrvial zone.
+                // create a new cargo ship and send it to the arrival zone.
                 Ship ship = Ship.getNewShip();
                 arrivalZone.arrive(ship);
 
