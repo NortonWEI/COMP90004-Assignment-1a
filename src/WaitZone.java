@@ -1,7 +1,6 @@
 public class WaitZone {
 
     private String name = "";
-    //    private int waitingShipNum = 0;
     private Ship ship;
 
     WaitZone(String name) {
@@ -9,16 +8,21 @@ public class WaitZone {
     }
 
     synchronized void depart() {
-
-    }
-
-    synchronized void arrive(Ship ship) {
-        while (this.getShip() != null) {
+        while (getShip() == null) {
             try {
                 wait();
             } catch (InterruptedException e) {}
         }
-        notify();
+        System.out.println(getShip() + " departs departure zone.");
+        this.ship = null;
+    }
+
+    synchronized void arrive(Ship ship) {
+        while (getShip() != null) {
+            try {
+                wait();
+            } catch (InterruptedException e) {}
+        }
         this.ship = ship;
         System.out.println(ship + " arrives at arrival zone.");
     }
@@ -29,6 +33,25 @@ public class WaitZone {
         if (pilot.getCurrentShip() != null) {
             System.out.println("pilot " + pilot.getPid() + " acquires " + pilot.getCurrentShip() + ".");
         }
+        notify();
+    }
+
+    synchronized void releaseShip(Pilot pilot) {
+        setShip(pilot.getCurrentShip());
+
+        if (pilot.getCurrentShip() != null) {
+            System.out.println("pilot " + pilot.getPid() + " releases " + pilot.getCurrentShip() + ".");
+        }
+
+        pilot.setCurrentShip(null);
+        pilot.setAcquireDockTugs(false);
+        pilot.setReleaseDockTugs(false);
+        pilot.setAcquireUndockTugs(false);
+        pilot.setReleaseUndockTugs(false);
+        pilot.setDocked(false);
+        pilot.setUndocked(false);
+
+        notify();
     }
 
     String getName() {

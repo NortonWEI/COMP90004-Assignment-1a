@@ -32,4 +32,12 @@ public class Ship {
     public String toString() {
         return "ship [" + id + "]";
     }
+
+    public boolean isLoaded() {
+        return loaded;
+    }
+
+    public void setLoaded(boolean loaded) {
+        this.loaded = loaded;
+    }
 }
