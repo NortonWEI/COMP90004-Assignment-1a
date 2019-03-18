@@ -2,13 +2,14 @@ public class Berth {
 
     private String name = "";
     private boolean isOccupied = false;
+    private boolean isShieldActivated = false;
 
     Berth(String name) {
         this.name = name;
     }
 
     synchronized void dock(Pilot pilot) {
-        while (isOccupied) {
+        while (isOccupied || isShieldActivated) {
             try {
                 wait();
             } catch (InterruptedException e) {}
@@ -19,6 +20,11 @@ public class Berth {
     }
 
     synchronized void undock(Pilot pilot) {
+        while (isShieldActivated) {
+            try {
+                wait();
+            } catch (InterruptedException e) {}
+        }
         isOccupied = false;
         pilot.setUndocked(true);
         System.out.println(pilot.getCurrentShip() + " undocks from berth.");
@@ -28,6 +34,17 @@ public class Berth {
     synchronized void unload(Pilot pilot) {
         pilot.getCurrentShip().setLoaded(false);
         System.out.println(pilot.getCurrentShip() + " being unloaded.");
+    }
+
+    synchronized void activateShield() {
+        isShieldActivated = true;
+        System.out.println("Shield is activated.");
+    }
+
+    synchronized void deactivateShield() {
+        isShieldActivated = false;
+        System.out.println("Shield is deactivated.");
+        notify();
     }
 
     String getName() {
@@ -46,4 +63,11 @@ public class Berth {
         isOccupied = occupied;
     }
 
+    public boolean isShieldActivated() {
+        return isShieldActivated;
+    }
+
+    public void setShieldActivated(boolean shieldActivated) {
+        isShieldActivated = shieldActivated;
+    }
 }
