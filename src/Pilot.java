@@ -21,37 +21,54 @@ public class Pilot extends Thread {
         this.berth = berth;
     }
 
+    @Override
     public void run() {
         while (!isInterrupted()) {
             try {
+                // start the task after acquirement
                 if (this.getCurrentShip() != null) {
+                    // acquire the tugs of docking
                     if (!isAcquireDockTugs) {
                         getTugs().acquireDockTugs(this);
+                        // travel to the vicinity of the berth
                         sleep(Params.TRAVEL_TIME);
                     } else {
+                        // dock at the berth of USS Emafor
                         if (!isDocked) {
                             getBerth().dock(this);
+                            // simulate the docking time
                             sleep(Params.DOCKING_TIME);
                         } else {
+                            // release the tugs while unloading for others to use
                             if (!isReleaseDockTugs) {
                                 getTugs().releaseDockTugs(this);
                             } else {
+                                // unload the ship
                                 if (this.getCurrentShip().isLoaded()) {
                                     getBerth().unload(this);
+                                    // simulate the unloading time
                                     sleep(Params.UNLOADING_TIME);
                                 } else {
+                                    // acquire the tugs of undocking
                                     if (!isAcquireUndockTugs) {
                                         getTugs().acquireUndockTugs(this);
                                     } else {
+                                        // undock from the berth of USS Emafor
                                         if (!isUndocked) {
                                             getBerth().undock(this);
+                                            // simulate the undocking time
                                             sleep(Params.UNDOCKING_TIME);
                                         } else {
+                                            // travel to departure zone
                                             sleep(Params.TRAVEL_TIME);
+                                            // release the tugs on arrival at departure zone
                                             if (!isReleaseUndockTugs) {
                                                 getTugs().releaseUndockTugs(this);
                                             } else {
-                                                getDepartureZone().releaseShip(this);
+                                                // drop the ship to departure zone
+                                                if (getDepartureZone().getShip() == null) {
+                                                    getDepartureZone().releaseShip(this);
+                                                }
                                             }
                                         }
                                     }
@@ -60,6 +77,7 @@ public class Pilot extends Thread {
                         }
                     }
                 } else {
+                    // acquire the ship from arrival zone
                     if (getArrivalZone().getShip() != null) {
                         getArrivalZone().acquireShip(this);
                     }

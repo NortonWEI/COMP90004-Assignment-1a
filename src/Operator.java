@@ -6,9 +6,11 @@ public class Operator extends Thread {
         this.berth = berth;
     }
 
+    @Override
     public void run() {
         while (!isInterrupted()) {
             try {
+                // activate and deactivate the shield periodically
                 sleep(Params.debrisLapse());
                 getBerth().activateShield();
                 sleep(Params.DEBRIS_TIME);

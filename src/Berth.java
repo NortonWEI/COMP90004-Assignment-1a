@@ -8,6 +8,10 @@ public class Berth {
         this.name = name;
     }
 
+    /**
+     * @param pilot The pilot that requests to dock after travel
+     * Dock the ship at the berth
+     */
     synchronized void dock(Pilot pilot) {
         while (isOccupied || isShieldActivated) {
             try {
@@ -19,6 +23,10 @@ public class Berth {
         System.out.println(pilot.getCurrentShip() + " docks at berth.");
     }
 
+    /**
+     * @param pilot The pilot that requests to undock after travel
+     * Undock the ship from the berth
+     */
     synchronized void undock(Pilot pilot) {
         while (isShieldActivated) {
             try {
@@ -31,16 +39,26 @@ public class Berth {
         notify();
     }
 
+    /**
+     * @param pilot The pilot that requests to unload
+     * Unload at the berth of USS Emafor
+     */
     synchronized void unload(Pilot pilot) {
         pilot.getCurrentShip().setLoaded(false);
         System.out.println(pilot.getCurrentShip() + " being unloaded.");
     }
 
+    /**
+     * Activate the shield
+     */
     synchronized void activateShield() {
         isShieldActivated = true;
         System.out.println("Shield is activated.");
     }
 
+    /**
+     * Deactivate the shield
+     */
     synchronized void deactivateShield() {
         isShieldActivated = false;
         System.out.println("Shield is deactivated.");
