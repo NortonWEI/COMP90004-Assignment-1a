@@ -6,6 +6,7 @@ public class Pilot extends Thread {
     private Tugs tugs;
     private Berth berth;
     private Ship currentShip;
+    private boolean isAcquireTugs = false;
 
     Pilot(int pid, WaitZone arrivalZone, WaitZone departureZone, Tugs tugs, Berth berth) {
         this.pid = pid;
@@ -18,12 +19,23 @@ public class Pilot extends Thread {
     public void run() {
         while (!isInterrupted()) {
             if (this.getCurrentShip() != null) {
-//                    System.out.println("pilot " + getPid() + " acquires 3 tugs");
+                if (!isAcquireTugs) {
+                    getTugs().acquireTugs(this);
+                } else {
+
+                }
             } else {
                 if (getArrivalZone().getShip() != null) {
                     getArrivalZone().acquireShip(this);
+//                } else {
+//                    synchronized (this) {
+//                        try {
+//                            wait();
+//                        } catch (InterruptedException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
                 }
-
             }
         }
     }
@@ -74,5 +86,13 @@ public class Pilot extends Thread {
 
     void setCurrentShip(Ship currentShip) {
         this.currentShip = currentShip;
+    }
+
+    public boolean isAcquireTugs() {
+        return isAcquireTugs;
+    }
+
+    public void setAcquireTugs(boolean acquireTugs) {
+        isAcquireTugs = acquireTugs;
     }
 }
