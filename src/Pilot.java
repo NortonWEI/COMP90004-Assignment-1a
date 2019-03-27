@@ -5,55 +5,55 @@
  */
 public class Pilot extends Thread {
 
-    //
+    // the id of the pilot
     private int pid;
 
-    //
+    // arrival zone of the system
     private WaitZone arrivalZone;
 
-    //
+    // departure zone of the system
     private WaitZone departureZone;
 
-    //
+    // tug controller that maintains the number of tugs available
     private Tugs tugs;
 
-    //
+    // the berth of USS Emafor
     private Berth berth;
 
-    //
+    // the ship that acquired by the pilot (can be null)
     private Ship currentShip;
 
-    //
+    // a flag indicating whether the tugs for dock have been required
     private boolean isAcquireDockTugs = false;
 
-    //
+    // a flag indicating whether the tugs for undock have been required
     private boolean isAcquireUndockTugs = false;
 
-    //
+    // a flag indicating whether the tugs for dock have been released
     private boolean isReleaseDockTugs = false;
 
-    //
+    // a flag indicating whether the tugs for undock have been released
     private boolean isReleaseUndockTugs = false;
 
-    //
+    // a flag indicating whether the ship is docked
     private boolean isDocked = false;
 
-    //
+    // a flag indicating whether the ship is undocked
     private boolean isUndocked = false;
 
-    //
+    // a flag indicating whether the ship has left arrival zone
     private boolean isDepartArrivalZone = false;
 
-    //
+    // a flag indicating whether the ship has got departure zone
     private boolean isArriveDepartureZone = false;
 
     /**
-     * @param pid
-     * @param arrivalZone
-     * @param departureZone
-     * @param tugs
-     * @param berth
-     *
+     * @param pid The id of the pilot
+     * @param arrivalZone Arrival zone of the system
+     * @param departureZone Departure zone of the system
+     * @param tugs Tug controller that maintains the number of tugs available
+     * @param berth The berth of USS Emafor
+     * Create a new pilot
      */
     Pilot(int pid, WaitZone arrivalZone, WaitZone departureZone, Tugs tugs, Berth berth) {
         this.pid = pid;
@@ -64,7 +64,7 @@ public class Pilot extends Thread {
     }
 
     /**
-     *
+     * Simulate the entire task of the pilot here
      */
     @Override
     public void run() {
@@ -72,37 +72,39 @@ public class Pilot extends Thread {
             try {
                 // start the task after acquirement
                 if (this.getCurrentShip() != null) {
-                    // acquire the tugs of docking
                     if (!isAcquireDockTugs) {
+                        // acquire the tugs of docking
                         getTugs().acquireDockTugs(this);
                     } else {
                         if (!isDepartArrivalZone) {
+                            // depart the ship from arrival zone
                             getArrivalZone().departFromArrivalZone(this);
                         } else {
                             // travel to the vicinity of the berth
                             sleep(Params.TRAVEL_TIME);
                             // dock at the berth of USS Emafor
                             if (!isDocked) {
+                                // dock the ship to berth
                                 getBerth().dock(this);
                                 // simulate the docking time
                                 sleep(Params.DOCKING_TIME);
                             } else {
-                                // release the tugs while unloading for others to use
                                 if (!isReleaseDockTugs) {
+                                    // release the tugs while unloading for others to use
                                     getTugs().releaseDockTugs(this);
                                 } else {
-                                    // unload the ship
                                     if (this.getCurrentShip().isLoaded()) {
+                                        // unload the ship
                                         getBerth().unload(this);
                                         // simulate the unloading time
                                         sleep(Params.UNLOADING_TIME);
                                     } else {
-                                        // acquire the tugs of undocking
                                         if (!isAcquireUndockTugs) {
+                                            // acquire the tugs of undocking
                                             getTugs().acquireUndockTugs(this);
                                         } else {
-                                            // undock from the berth of USS Emafor
                                             if (!isUndocked) {
+                                                // undock from the berth of USS Emafor
                                                 getBerth().undock(this);
                                                 // simulate the undocking time
                                                 sleep(Params.UNDOCKING_TIME);
@@ -110,10 +112,11 @@ public class Pilot extends Thread {
                                                 // travel to departure zone
                                                 sleep(Params.TRAVEL_TIME);
                                                 if (!isArriveDepartureZone) {
+                                                    // park the ship into departure zone
                                                     getDepartureZone().arriveAtDepartureZone(this);
                                                 } else {
-                                                    // release the tugs on arrival at departure zone
                                                     if (!isReleaseUndockTugs) {
+                                                        // release the tugs on arrival at departure zone
                                                         getTugs().releaseUndockTugs(this);
                                                     } else {
                                                         // get off the ship to departure zone
