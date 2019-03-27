@@ -1,10 +1,9 @@
 /**
  * Consumes unloaded cargo ships from the departure zone.
  *
- * @author ngeard@unimelb.edu.au
+ * @author ngeard@unimelb.edu.au (edited by: Wenzhou Wei (903836))
  *
  */
-
 public class Consumer extends Thread {
 
     // the wait zone from which cargo ships depart

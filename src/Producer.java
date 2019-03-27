@@ -1,7 +1,7 @@
 /**
  * Produces new cargo ships wanting to unload cargo at the space station.
  *
- * @author ngeard@unimelb.edu.au
+ * @author ngeard@unimelb.edu.au (edited by: Wenzhou Wei (903836))
  *
  */
 

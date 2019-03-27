@@ -5,7 +5,7 @@
  *  - creating all the components of the system;
  *  - starting all of the processes;
  *
- * @author ngeard@unimelb.edu.au
+ * @author ngeard@unimelb.edu.au (edited by: Wenzhou Wei (903836))
  *
  */
 
@@ -14,7 +14,6 @@ public class Main {
     /**
      * The driver of the space station docking simulation
      */
-
     public static void main(String [] args) throws InterruptedException {
 
         // generate the locations and tugs

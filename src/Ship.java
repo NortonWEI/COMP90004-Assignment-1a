@@ -2,10 +2,9 @@
  * A cargo ship, with a unique id, that arrives at
  * the space station to deliver its cargo.
  *
- * @author ngeard@unimelb.edu.au
+ * @author ngeard@unimelb.edu.au (edited by: Wenzhou Wei (903836))
  *
  */
-
 public class Ship {
 
     // a unique identifier for this cargo ship
@@ -17,10 +16,13 @@ public class Ship {
     // a flag indicating whether the ship is currently loaded
     private boolean loaded;
 
+    private boolean isAcquired;
+
     // create a new vessel with a given identifier
     private Ship(int id) {
         this.id = id;
         this.loaded = true;
+        this.isAcquired = false;
     }
 
     // get a new Ship instance with a unique identifier
@@ -39,5 +41,13 @@ public class Ship {
 
     public void setLoaded(boolean loaded) {
         this.loaded = loaded;
+    }
+
+    public boolean isAcquired() {
+        return isAcquired;
+    }
+
+    public void setAcquired(boolean acquired) {
+        isAcquired = acquired;
     }
 }

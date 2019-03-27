@@ -15,6 +15,8 @@ public class Pilot extends Thread {
     private boolean isReleaseUndockTugs = false;
     private boolean isDocked = false;
     private boolean isUndocked = false;
+    private boolean isDepartArrivalZone = false;
+    private boolean isArriveDepartureZone = false;
 
     Pilot(int pid, WaitZone arrivalZone, WaitZone departureZone, Tugs tugs, Berth berth) {
         this.pid = pid;
@@ -33,44 +35,50 @@ public class Pilot extends Thread {
                     // acquire the tugs of docking
                     if (!isAcquireDockTugs) {
                         getTugs().acquireDockTugs(this);
-                        // travel to the vicinity of the berth
-                        sleep(Params.TRAVEL_TIME);
                     } else {
-                        // dock at the berth of USS Emafor
-                        if (!isDocked) {
-                            getBerth().dock(this);
-                            // simulate the docking time
-                            sleep(Params.DOCKING_TIME);
+                        if (!isDepartArrivalZone) {
+                            getArrivalZone().departFromArrivalZone(this);
                         } else {
-                            // release the tugs while unloading for others to use
-                            if (!isReleaseDockTugs) {
-                                getTugs().releaseDockTugs(this);
+                            // travel to the vicinity of the berth
+                            sleep(Params.TRAVEL_TIME);
+                            // dock at the berth of USS Emafor
+                            if (!isDocked) {
+                                getBerth().dock(this);
+                                // simulate the docking time
+                                sleep(Params.DOCKING_TIME);
                             } else {
-                                // unload the ship
-                                if (this.getCurrentShip().isLoaded()) {
-                                    getBerth().unload(this);
-                                    // simulate the unloading time
-                                    sleep(Params.UNLOADING_TIME);
+                                // release the tugs while unloading for others to use
+                                if (!isReleaseDockTugs) {
+                                    getTugs().releaseDockTugs(this);
                                 } else {
-                                    // acquire the tugs of undocking
-                                    if (!isAcquireUndockTugs) {
-                                        getTugs().acquireUndockTugs(this);
+                                    // unload the ship
+                                    if (this.getCurrentShip().isLoaded()) {
+                                        getBerth().unload(this);
+                                        // simulate the unloading time
+                                        sleep(Params.UNLOADING_TIME);
                                     } else {
-                                        // undock from the berth of USS Emafor
-                                        if (!isUndocked) {
-                                            getBerth().undock(this);
-                                            // simulate the undocking time
-                                            sleep(Params.UNDOCKING_TIME);
+                                        // acquire the tugs of undocking
+                                        if (!isAcquireUndockTugs) {
+                                            getTugs().acquireUndockTugs(this);
                                         } else {
-                                            // travel to departure zone
-                                            sleep(Params.TRAVEL_TIME);
-                                            // release the tugs on arrival at departure zone
-                                            if (!isReleaseUndockTugs) {
-                                                getTugs().releaseUndockTugs(this);
+                                            // undock from the berth of USS Emafor
+                                            if (!isUndocked) {
+                                                getBerth().undock(this);
+                                                // simulate the undocking time
+                                                sleep(Params.UNDOCKING_TIME);
                                             } else {
-                                                // get off the ship to departure zone
-                                                if (getDepartureZone().getShip() == null) {
-                                                    getDepartureZone().releaseShip(this);
+                                                // travel to departure zone
+                                                sleep(Params.TRAVEL_TIME);
+                                                if (!isArriveDepartureZone) {
+                                                    getDepartureZone().arriveAtDepartureZone(this);
+                                                } else {
+                                                    // release the tugs on arrival at departure zone
+                                                    if (!isReleaseUndockTugs) {
+                                                        getTugs().releaseUndockTugs(this);
+                                                    } else {
+                                                        // get off the ship to departure zone
+                                                        getDepartureZone().releaseShip(this);
+                                                    }
                                                 }
                                             }
                                         }
@@ -81,9 +89,7 @@ public class Pilot extends Thread {
                     }
                 } else {
                     // acquire the ship from arrival zone
-                    if (getArrivalZone().getShip() != null) {
-                        getArrivalZone().acquireShip(this);
-                    }
+                    getArrivalZone().acquireShip(this);
                 }
             } catch (InterruptedException e) {
                 this.interrupt();
@@ -131,11 +137,11 @@ public class Pilot extends Thread {
         this.berth = berth;
     }
 
-    Ship getCurrentShip() {
+    public Ship getCurrentShip() {
         return currentShip;
     }
 
-    void setCurrentShip(Ship currentShip) {
+    public void setCurrentShip(Ship currentShip) {
         this.currentShip = currentShip;
     }
 
@@ -185,5 +191,21 @@ public class Pilot extends Thread {
 
     public void setUndocked(boolean undocked) {
         isUndocked = undocked;
+    }
+
+    public boolean isDepartArrivalZone() {
+        return isDepartArrivalZone;
+    }
+
+    public void setDepartArrivalZone(boolean departArrivalZone) {
+        isDepartArrivalZone = departArrivalZone;
+    }
+
+    public boolean isArriveDepartureZone() {
+        return isArriveDepartureZone;
+    }
+
+    public void setArriveDepartureZone(boolean arriveDepartureZone) {
+        isArriveDepartureZone = arriveDepartureZone;
     }
 }

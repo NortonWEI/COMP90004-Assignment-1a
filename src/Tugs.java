@@ -31,7 +31,8 @@ public class Tugs {
         this.num += Params.DOCKING_TUGS;
         pilot.setReleaseDockTugs(true);
         System.out.println("pilot " + pilot.getPid() + " releases " + Params.DOCKING_TUGS + " tugs (" + getNum() + " available).");
-        notify();
+
+        notifyAll();
     }
 
     /**
@@ -57,7 +58,8 @@ public class Tugs {
         this.num += Params.UNDOCKING_TUGS;
         pilot.setReleaseUndockTugs(true);
         System.out.println("pilot " + pilot.getPid() + " releases " + Params.UNDOCKING_TUGS + " tugs (" + getNum() + " available).");
-        notify();
+
+        notifyAll();
     }
 
     public int getNum() {

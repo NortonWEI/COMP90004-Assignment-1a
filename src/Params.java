@@ -1,5 +1,8 @@
 import java.util.Random;
 
+/**
+ * @author ngeard@unimelb.edu.au (edited by: Wenzhou Wei (903836))
+ */
 class Params {
     static final int NUM_PILOTS = 3;
 

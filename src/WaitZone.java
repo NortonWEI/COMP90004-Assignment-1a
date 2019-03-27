@@ -1,4 +1,8 @@
 /**
+ * The WaitZone is instantiated into an arrival zone an departure zone.
+ * Arrival zone accepts new ships from Producer, passes ships as pilots' acquirement and releases ships for following steps.
+ * Departure zone accepts ships that finishes unload, lets pilots get off the ships and releases ships to Consumer.
+ *
  * @author Wenzhou Wei (903836)
  */
 public class WaitZone {
@@ -8,6 +12,7 @@ public class WaitZone {
 
     WaitZone(String name) {
         this.name = name;
+        this.ship = null;
     }
 
     /**
@@ -15,26 +20,30 @@ public class WaitZone {
      * Add the ship produced to arrival zone
      */
     synchronized void arrive(Ship ship) {
-        while (getShip() != null) {
+        while (this.ship != null) {
             try {
                 wait();
             } catch (InterruptedException e) {}
         }
         this.ship = ship;
         System.out.println(ship + " arrives at arrival zone.");
+
+        notifyAll();
     }
 
     /**
      * Remove the ship from departure zone
      */
     synchronized void depart() {
-        while (getShip() == null) {
+        while (getShip() == null || getShip().isAcquired()) {
             try {
                 wait();
             } catch (InterruptedException e) {}
         }
         System.out.println(getShip() + " departs departure zone.");
-        this.ship = null;
+        setShip(null);
+
+        notifyAll();
     }
 
     /**
@@ -42,12 +51,14 @@ public class WaitZone {
      * Allocate the ship at arrival zone to the pilot acquired
      */
     synchronized void acquireShip(Pilot pilot) {
-        pilot.setCurrentShip(getShip());
-        setShip(null);
-        if (pilot.getCurrentShip() != null) {
-            System.out.println("pilot " + pilot.getPid() + " acquires " + pilot.getCurrentShip() + ".");
+        while (getShip() == null || getShip().isAcquired()) {
+            try {
+                wait();
+            } catch (InterruptedException e) {}
         }
-        notify();
+        pilot.setCurrentShip(getShip());
+        pilot.getCurrentShip().setAcquired(true);
+        System.out.println("pilot " + pilot.getPid() + " acquires " + pilot.getCurrentShip() + ".");
     }
 
     /**
@@ -55,11 +66,8 @@ public class WaitZone {
      * Leave the ship at arrival zone from the pilot released
      */
     synchronized void releaseShip(Pilot pilot) {
-        setShip(pilot.getCurrentShip());
-
-        if (pilot.getCurrentShip() != null) {
-            System.out.println("pilot " + pilot.getPid() + " releases " + pilot.getCurrentShip() + ".");
-        }
+        pilot.getCurrentShip().setAcquired(false);
+        System.out.println("pilot " + pilot.getPid() + " releases " + pilot.getCurrentShip() + ".");
 
         // reinitialize the pilot that just finishes the task
         pilot.setCurrentShip(null);
@@ -69,23 +77,43 @@ public class WaitZone {
         pilot.setReleaseUndockTugs(false);
         pilot.setDocked(false);
         pilot.setUndocked(false);
+        pilot.setDepartArrivalZone(false);
+        pilot.setArriveDepartureZone(false);
 
-        notify();
+        notifyAll();
     }
 
-    String getName() {
+    synchronized void departFromArrivalZone(Pilot pilot) {
+        pilot.setDepartArrivalZone(true);
+        setShip(null);
+        notifyAll();
+    }
+
+    synchronized void arriveAtDepartureZone(Pilot pilot) {
+        while (getShip() != null) {
+            try {
+                wait();
+            } catch (InterruptedException e) {}
+        }
+        setShip(pilot.getCurrentShip());
+        pilot.setArriveDepartureZone(true);
+
+        notifyAll();
+    }
+
+    public String getName() {
         return name;
     }
 
-    void setName(String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
-    Ship getShip() {
+    public Ship getShip() {
         return ship;
     }
 
-    void setShip(Ship ship) {
+    public void setShip(Ship ship) {
         this.ship = ship;
     }
 }

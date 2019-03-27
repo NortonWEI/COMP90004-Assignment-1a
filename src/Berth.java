@@ -39,7 +39,8 @@ public class Berth {
         isOccupied = false;
         pilot.setUndocked(true);
         System.out.println(pilot.getCurrentShip() + " undocks from berth.");
-        notify();
+
+        notifyAll();
     }
 
     /**
@@ -65,14 +66,15 @@ public class Berth {
     synchronized void deactivateShield() {
         isShieldActivated = false;
         System.out.println("Shield is deactivated.");
-        notify();
+
+        notifyAll();
     }
 
-    String getName() {
+    public String getName() {
         return name;
     }
 
-    void setName(String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
