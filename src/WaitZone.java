@@ -26,17 +26,22 @@ public class WaitZone {
 
     /**
      * @param ship The ship that arrives at arrival zone
-     * Add the ship produced to arrival zone
+     * Add the ship produced to arrival zone (assume the wait zone has a fixed capacity of 1)
      */
     synchronized void arrive(Ship ship) {
+
+        // lock the producer thread when there has been a ship at arrival zone
         while (this.ship != null) {
             try {
                 wait();
             } catch (InterruptedException e) {}
         }
+
+        // allocate the ship at arrival zone
         this.ship = ship;
         System.out.println(ship + " arrives at arrival zone.");
 
+        // unlock a pilot thread when a new ship arrives
         notifyAll();
     }
 
@@ -44,14 +49,19 @@ public class WaitZone {
      * Remove the ship from departure zone
      */
     synchronized void depart() {
+
+        // lock the consumer thread when there is no ship at departure zone or the ship is acquired (the pilot is still on board)
         while (getShip() == null || getShip().isAcquired()) {
             try {
                 wait();
             } catch (InterruptedException e) {}
         }
+
+        // remove the ship from departure zone
         System.out.println(getShip() + " departs departure zone.");
         setShip(null);
 
+        // unlock a pilot thread when the ship leaves departure zone
         notifyAll();
     }
 
@@ -60,11 +70,15 @@ public class WaitZone {
      * Allocate the ship at arrival zone to the pilot acquired
      */
     synchronized void acquireShip(Pilot pilot) {
+
+        // lock a pilot thread when no ship available at arrival zone or the ship has been acquired by another pilot thread
         while (getShip() == null || getShip().isAcquired()) {
             try {
                 wait();
             } catch (InterruptedException e) {}
         }
+
+        // assign the ship to the pilot
         pilot.setCurrentShip(getShip());
         pilot.getCurrentShip().setAcquired(true);
         System.out.println("pilot " + pilot.getPid() + " acquires " + pilot.getCurrentShip() + ".");
@@ -75,6 +89,8 @@ public class WaitZone {
      * Leave the ship at arrival zone from the pilot released
      */
     synchronized void releaseShip(Pilot pilot) {
+
+        // the pilot gets off the ship
         pilot.getCurrentShip().setAcquired(false);
         System.out.println("pilot " + pilot.getPid() + " releases " + pilot.getCurrentShip() + ".");
 
@@ -89,6 +105,7 @@ public class WaitZone {
         pilot.setDepartArrivalZone(false);
         pilot.setArriveDepartureZone(false);
 
+        // unlock the consumer thread when the pilot gets off
         notifyAll();
     }
 
@@ -97,25 +114,33 @@ public class WaitZone {
      * Remove the ship from arrival zone
      */
     synchronized void departFromArrivalZone(Pilot pilot) {
+
+        // remove the ship from arrival zone
         pilot.setDepartArrivalZone(true);
         setShip(null);
 
+        // unlock the producer thread when the ship has departed from arrival zone
         notifyAll();
     }
 
     /**
      * @param pilot The pilot that arrives at departure zone with his/her ship
-     * Add the ship to departure zone
+     * Add the ship to departure zone (assume the wait zone has a fixed capacity of 1)
      */
     synchronized void arriveAtDepartureZone(Pilot pilot) {
+
+        // lock a pilot thread when departure zone has a ship already (full)
         while (getShip() != null) {
             try {
                 wait();
             } catch (InterruptedException e) {}
         }
+
+        // add the ship to departure zone
         setShip(pilot.getCurrentShip());
         pilot.setArriveDepartureZone(true);
 
+        // unlock the consumer thread when a ship arrives at departure zone
         notifyAll();
     }
 

@@ -24,11 +24,15 @@ public class Tugs {
      * Allocate current available tugs of docking as the pilot acquired
      */
     synchronized void acquireDockTugs(Pilot pilot) {
+
+        // lock a pilot thread when the number of available docking tugs is less than 0
         while (this.num - Params.DOCKING_TUGS < 0) {
             try {
                 wait();
             } catch (InterruptedException e) {}
         }
+
+        // acquire docking tugs
         this.num -= Params.DOCKING_TUGS;
         pilot.setAcquireDockTugs(true);
         System.out.println("pilot " + pilot.getPid() + " acquires " + Params.DOCKING_TUGS + " tugs (" + getNum() + " available).");
@@ -39,10 +43,13 @@ public class Tugs {
      * Deallocate current available tugs of docking as the pilot acquired
      */
     synchronized void releaseDockTugs(Pilot pilot) {
+
+        // release docking tugs
         this.num += Params.DOCKING_TUGS;
         pilot.setReleaseDockTugs(true);
         System.out.println("pilot " + pilot.getPid() + " releases " + Params.DOCKING_TUGS + " tugs (" + getNum() + " available).");
 
+        // unlock a pilot thread when docking tugs are released
         notifyAll();
     }
 
@@ -51,11 +58,15 @@ public class Tugs {
      * Allocate current available tugs of undocking as the pilot acquired
      */
     synchronized void acquireUndockTugs(Pilot pilot) {
+
+        // lock a pilot thread when the number of available undocking tugs is less than 0
         while (this.num - Params.UNDOCKING_TUGS < 0) {
             try {
                 wait();
             } catch (InterruptedException e) {}
         }
+
+        // acquire undocking tugs
         this.num -= Params.UNDOCKING_TUGS;
         pilot.setAcquireUndockTugs(true);
         System.out.println("pilot " + pilot.getPid() + " acquires " + Params.UNDOCKING_TUGS + " tugs (" + getNum() + " available).");
@@ -66,10 +77,13 @@ public class Tugs {
      * Deallocate current available tugs of undocking as the pilot acquired
      */
     synchronized void releaseUndockTugs(Pilot pilot) {
+
+        // release undocking tugs
         this.num += Params.UNDOCKING_TUGS;
         pilot.setReleaseUndockTugs(true);
         System.out.println("pilot " + pilot.getPid() + " releases " + Params.UNDOCKING_TUGS + " tugs (" + getNum() + " available).");
 
+        // unlock a pilot thread when undocking tugs are released
         notifyAll();
     }
 

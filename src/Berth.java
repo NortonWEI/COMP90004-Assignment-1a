@@ -31,11 +31,15 @@ public class Berth {
      * Dock the ship at the berth
      */
     synchronized void dock(Pilot pilot) {
+
+        // lock a pilot thread when there has been a ship occupying the berth or the shield is activated
         while (isOccupied || isShieldActivated) {
             try {
                 wait();
             } catch (InterruptedException e) {}
         }
+
+        // finish docking and occupy the berth
         isOccupied = true;
         pilot.setDocked(true);
         System.out.println(pilot.getCurrentShip() + " docks at berth.");
@@ -46,15 +50,20 @@ public class Berth {
      * Undock the ship from the berth
      */
     synchronized void undock(Pilot pilot) {
+
+        // lock a pilot thread when the shield is activated
         while (isShieldActivated) {
             try {
                 wait();
             } catch (InterruptedException e) {}
         }
+
+        // finish undocking and empty the berth
         isOccupied = false;
         pilot.setUndocked(true);
         System.out.println(pilot.getCurrentShip() + " undocks from berth.");
 
+        // unlock a pilot thread when the berth is available for unload
         notifyAll();
     }
 
@@ -63,6 +72,8 @@ public class Berth {
      * Unload at the berth of USS Emafor
      */
     synchronized void unload(Pilot pilot) {
+
+        // unload the ship
         pilot.getCurrentShip().setLoaded(false);
         System.out.println(pilot.getCurrentShip() + " being unloaded.");
     }
@@ -71,6 +82,8 @@ public class Berth {
      * Activate the shield
      */
     synchronized void activateShield() {
+
+        // activate the shield
         isShieldActivated = true;
         System.out.println("Shield is activated.");
     }
@@ -79,9 +92,12 @@ public class Berth {
      * Deactivate the shield
      */
     synchronized void deactivateShield() {
+
+        // deactivate the shield
         isShieldActivated = false;
         System.out.println("Shield is deactivated.");
 
+        //unlock a pilot thread when the shield is deactivated
         notifyAll();
     }
 

@@ -25,9 +25,9 @@ public class Operator extends Thread {
             try {
                 // activate and deactivate the shield periodically
                 sleep(Params.debrisLapse());
-                getBerth().activateShield();
+                getBerth().activateShield();    // activate shield
                 sleep(Params.DEBRIS_TIME);
-                getBerth().deactivateShield();
+                getBerth().deactivateShield();  // deactivate shield
             } catch (InterruptedException e) {
                 this.interrupt();
             }
