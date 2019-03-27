@@ -1,3 +1,6 @@
+/**
+ * @author Wenzhou Wei (903836)
+ */
 public class Tugs {
     private int num;
 

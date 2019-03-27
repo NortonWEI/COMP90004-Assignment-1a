@@ -1,3 +1,6 @@
+/**
+ * @author Wenzhou Wei (903836)
+ */
 public class Pilot extends Thread {
 
     private int pid;
@@ -65,7 +68,7 @@ public class Pilot extends Thread {
                                             if (!isReleaseUndockTugs) {
                                                 getTugs().releaseUndockTugs(this);
                                             } else {
-                                                // drop the ship to departure zone
+                                                // get off the ship to departure zone
                                                 if (getDepartureZone().getShip() == null) {
                                                     getDepartureZone().releaseShip(this);
                                                 }

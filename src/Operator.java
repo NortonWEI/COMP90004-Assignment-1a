@@ -1,3 +1,6 @@
+/**
+ * @author Wenzhou Wei (903836)
+ */
 public class Operator extends Thread {
 
     private Berth berth;
