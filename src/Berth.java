@@ -1,10 +1,21 @@
 /**
+ * A monitor class
+ *
+ * Dock and undock the cargo ships to and from the berth of USS Emafor.
+ * Unload the ships.
+ * Activate and deactivate the shield.
+ *
  * @author Wenzhou Wei (903836)
  */
 public class Berth {
 
+    //
     private String name = "";
+
+    //
     private boolean isOccupied = false;
+
+    //
     private boolean isShieldActivated = false;
 
     Berth(String name) {
@@ -70,6 +81,7 @@ public class Berth {
         notifyAll();
     }
 
+    // getters and setters
     public String getName() {
         return name;
     }

@@ -1,4 +1,6 @@
 /**
+ * The pilot that executes the entire simulation from acquiring ships until getting off ships.
+ *
  * @author Wenzhou Wei (903836)
  */
 public class Pilot extends Thread {
@@ -97,6 +99,7 @@ public class Pilot extends Thread {
         }
     }
 
+    // getters and setters
     public int getPid() {
         return pid;
     }

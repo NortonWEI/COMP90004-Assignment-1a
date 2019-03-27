@@ -1,4 +1,6 @@
 /**
+ * Control the time of shield activation and deactivation.
+ *
  * @author Wenzhou Wei (903836)
  */
 public class Operator extends Thread {
@@ -24,6 +26,7 @@ public class Operator extends Thread {
         }
     }
 
+    // getters and setters
     public Berth getBerth() {
         return berth;
     }

@@ -1,6 +1,9 @@
 import java.util.Random;
 
 /**
+ * The customisable parameters of the system.
+ * The random generator of arrival, departure and debris lapse.
+ *
  * @author ngeard@unimelb.edu.au (edited by: Wenzhou Wei (903836))
  */
 class Params {

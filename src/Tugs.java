@@ -1,4 +1,9 @@
 /**
+ * A monitor class
+ *
+ * Maintain the quantity of tugs that can be used for dock and undock.
+ * Allocate and Deallocate the tugs for each dock and undock process.
+ *
  * @author Wenzhou Wei (903836)
  */
 public class Tugs {
@@ -62,6 +67,7 @@ public class Tugs {
         notifyAll();
     }
 
+    // getters and setters
     public int getNum() {
         return num;
     }

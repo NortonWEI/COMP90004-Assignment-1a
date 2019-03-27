@@ -16,6 +16,7 @@ public class Ship {
     // a flag indicating whether the ship is currently loaded
     private boolean loaded;
 
+    //
     private boolean isAcquired;
 
     // create a new vessel with a given identifier
@@ -35,6 +36,7 @@ public class Ship {
         return "ship [" + id + "]";
     }
 
+    // getters and setters
     public boolean isLoaded() {
         return loaded;
     }

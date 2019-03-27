@@ -1,4 +1,6 @@
 /**
+ * A monitor class
+ *
  * The WaitZone is instantiated into an arrival zone an departure zone.
  * Arrival zone accepts new ships from Producer, passes ships as pilots' acquirement and releases ships for following steps.
  * Departure zone accepts ships that finishes unload, lets pilots get off the ships and releases ships to Consumer.
@@ -7,7 +9,10 @@
  */
 public class WaitZone {
 
+    //
     private String name = "";
+
+    //
     private Ship ship;
 
     WaitZone(String name) {
@@ -83,12 +88,18 @@ public class WaitZone {
         notifyAll();
     }
 
+    /**
+     * @param pilot
+     */
     synchronized void departFromArrivalZone(Pilot pilot) {
         pilot.setDepartArrivalZone(true);
         setShip(null);
         notifyAll();
     }
 
+    /**
+     * @param pilot
+     */
     synchronized void arriveAtDepartureZone(Pilot pilot) {
         while (getShip() != null) {
             try {
@@ -101,6 +112,7 @@ public class WaitZone {
         notifyAll();
     }
 
+    // getters and setters
     public String getName() {
         return name;
     }
