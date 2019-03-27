@@ -65,6 +65,7 @@ public class Pilot extends Thread {
 
     /**
      * Simulate the entire task of the pilot here
+     * Every successive step is located at the "else" portion of its preceding step
      */
     @Override
     public void run() {
