@@ -5,12 +5,20 @@
  */
 public class Operator extends Thread {
 
+    // the berth that equipped the shield
     private Berth berth;
 
+    /**
+     * @param berth The berth that equipped the shield
+     * Create a new operator to control the activation time of the shield
+     */
     Operator(Berth berth) {
         this.berth = berth;
     }
 
+    /**
+     * The shield activates and deactivates consecutively
+     */
     @Override
     public void run() {
         while (!isInterrupted()) {

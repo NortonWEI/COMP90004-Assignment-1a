@@ -5,21 +5,56 @@
  */
 public class Pilot extends Thread {
 
+    //
     private int pid;
+
+    //
     private WaitZone arrivalZone;
+
+    //
     private WaitZone departureZone;
+
+    //
     private Tugs tugs;
+
+    //
     private Berth berth;
+
+    //
     private Ship currentShip;
+
+    //
     private boolean isAcquireDockTugs = false;
+
+    //
     private boolean isAcquireUndockTugs = false;
+
+    //
     private boolean isReleaseDockTugs = false;
+
+    //
     private boolean isReleaseUndockTugs = false;
+
+    //
     private boolean isDocked = false;
+
+    //
     private boolean isUndocked = false;
+
+    //
     private boolean isDepartArrivalZone = false;
+
+    //
     private boolean isArriveDepartureZone = false;
 
+    /**
+     * @param pid
+     * @param arrivalZone
+     * @param departureZone
+     * @param tugs
+     * @param berth
+     *
+     */
     Pilot(int pid, WaitZone arrivalZone, WaitZone departureZone, Tugs tugs, Berth berth) {
         this.pid = pid;
         this.arrivalZone = arrivalZone;
@@ -28,6 +63,9 @@ public class Pilot extends Thread {
         this.berth = berth;
     }
 
+    /**
+     *
+     */
     @Override
     public void run() {
         while (!isInterrupted()) {

@@ -16,7 +16,7 @@ public class Ship {
     // a flag indicating whether the ship is currently loaded
     private boolean loaded;
 
-    //
+    // a flag indicating whether the ship is acquired by a pilot
     private boolean isAcquired;
 
     // create a new vessel with a given identifier

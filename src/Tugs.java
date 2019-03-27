@@ -7,8 +7,14 @@
  * @author Wenzhou Wei (903836)
  */
 public class Tugs {
+
+    // the number of tugs available
     private int num;
 
+    /**
+     * @param num The number of tugs available
+     * Create a new tug controller
+     */
     Tugs(int num) {
         this.num = num;
     }

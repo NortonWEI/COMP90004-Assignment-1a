@@ -9,15 +9,19 @@
  */
 public class Berth {
 
-    //
+    // The name of the berth
     private String name = "";
 
-    //
+    // a flag indicating whether the berth is occupied by a ship already
     private boolean isOccupied = false;
 
-    //
+    // a flag indicating whether the shield of the berth is activated or not
     private boolean isShieldActivated = false;
 
+    /**
+     * @param name The name of the berth, namely "berth"
+     * Create a new berth
+     */
     Berth(String name) {
         this.name = name;
     }
