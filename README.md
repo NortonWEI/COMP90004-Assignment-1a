@@ -1,6 +1,6 @@
 # SWEN90004-Assignment-1a
 
-## readme.md
+## README.md
 *The file currently opened*
 
 ## src/
