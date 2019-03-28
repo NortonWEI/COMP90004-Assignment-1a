@@ -1,3 +1,5 @@
+# Author: Wenzhou Wei (903836)
+
 The system simulates the entire operation process of multiple pilots from acquiring to releasing their ships around USS Emafor. The simulative model adopts multithreading techniques so that multiple pilots are able to work concurrently, while the producer and the consumer should allocate and deallocate ships according to the status of wait zones. There are various constraints (e.g. the number of tugs, the activation of the shield, etc.) on the system, resulting in various locks involved thereof. Hence, some potential problems and insights are discovered based on my observation of the system.
 
 For simplicity, I assume that the capacities of arrival zone and departure zone are both 1. However, if more capacity is further required, it is also possible to upgrade the system by maintaining a list of ships in wait zones, yet the main idea does not change much. The producer should be locked when its list is full, while unlocked otherwise.  The producer should be locked when its list is full, while unlocked otherwise. Similarly, the consumer should be locked when its list is empty, while unlocked otherwise.
